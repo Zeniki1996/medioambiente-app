@@ -105,6 +105,7 @@ function App() {
                             padding: 4,
                             width: 250,
                             minHeight: 500
+                      
                           }}
                         >
                           {column.items.map((item, index) => {
