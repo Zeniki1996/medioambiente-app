@@ -1,38 +1,51 @@
-.App {
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background-image: url("pngtree-beautiful-hand-painted-green-garbage-collection-illustration-background-image_945238.jpg");
+ background-repeat: no-repeat;
+ background-size: cover;
+}
+
+.app {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h1 {
+  font-size: 4rem;
+  color: #e2e9eb;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+p{
+  text-align: center;
 }
+.tasks {
+ border: 1px dotted pink; 
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
+}
+.task-container {
+  border: 3px dotted rgb(1, 3, 2); 
+  margin: 0;
+  background:rgb(235, 235, 235);
+  list-style: none;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 3rem;
+  width:500px;
+  display: inline-flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.task-item {
+  color: aliceblue;
+  box-shadow: 0px 2px 4px #4a4c4e;
+  border-radius: 30px;
+  padding: 0.3em 0.5em;
+  background-color: #4a4c4e;
+  text-align: center;
+  margin: 5px;
+  border: 2px solid transparent;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.task-item:focus {
+  outline: none;
+  border: 17px solid #4a9af5;
 }
