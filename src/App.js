@@ -1,23 +1,155 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+
+const tasks = [
+  { id: "1", content: "Botella de Coca cola " },
+  { id: "2", content: "Cuaderno" },
+  { id: "3", content: "Botlla de vino" },
+  { id: "4", content: "Hueso de manzana" },
+  { id: "5", content: "cascara de babana" },
+  { id: "6", content: "Funda de supermaxi" },
+  { id: "7", content: "caja de regalo rota" }
+];
+
+const taskStatus = {
+  requested: {
+    name: "Papel",
+    items: tasks
+  },
+  toDo: {
+    name: "Orgánico",
+    items: []
+  },
+  inProgress: {
+    name: "Vidrio",
+    items: []
+  },
+  done: {
+    name: "Plástico",
+    items: []
+  }
+};
+
+const onDragEnd = (result, columns, setColumns) => {
+  if (!result.destination) return;
+  const { source, destination } = result;
+
+  if (source.droppableId !== destination.droppableId) {
+    const sourceColumn = columns[source.droppableId];
+    const destColumn = columns[destination.droppableId];
+    const sourceItems = [...sourceColumn.items];
+    const destItems = [...destColumn.items];
+    const [removed] = sourceItems.splice(source.index, 1);
+    destItems.splice(destination.index, 0, removed);
+    setColumns({
+      ...columns,
+      [source.droppableId]: {
+        ...sourceColumn,
+        items: sourceItems
+      },
+      [destination.droppableId]: {
+        ...destColumn,
+        items: destItems
+      }
+    });
+  } else {
+    const column = columns[source.droppableId];
+    const copiedItems = [...column.items];
+    const [removed] = copiedItems.splice(source.index, 1);
+    copiedItems.splice(destination.index, 0, removed);
+    setColumns({
+      ...columns,
+      [source.droppableId]: {
+        ...column,
+        items: copiedItems
+      }
+    });
+  }
+};
 
 function App() {
+  const [columns, setColumns] = useState(taskStatus);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div>
+      <h1 style={{ textAlign: "center" }}>Medio Ambiente</h1>
+      <p>En el los siguientes cuadros pon la basura en su lugar</p>
+      <div
+        style={{ display: "flex", justifyContent: "center", height: "100%" }}
+      >
+        <DragDropContext
+          onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
         >
-          Learn React
-        </a>
-      </header>
+          {Object.entries(columns).map(([columnId, column], index) => {
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center"
+                }}
+                key={columnId}
+              >
+                <h2>{column.name}</h2>
+                <div style={{ margin: 8 }}>
+                  <Droppable droppableId={columnId} key={columnId}>
+                    {(provided, snapshot) => {
+                      return (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          style={{
+                            background: snapshot.isDraggingOver
+                              ? "lightblue"
+                              : "lightgrey",
+                            padding: 4,
+                            width: 250,
+                            minHeight: 500
+                          }}
+                        >
+                          {column.items.map((item, index) => {
+                            return (
+                              <Draggable
+                                key={item.id}
+                                draggableId={item.id}
+                                index={index}
+                              >
+                                {(provided, snapshot) => {
+                                  return (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      style={{
+                                        userSelect: "none",
+                                        padding: 16,
+                                        margin: "0 0 8px 0",
+                                        minHeight: "50px",
+                                        backgroundColor: snapshot.isDragging
+                                          ? "#263B4A"
+                                          : "#456C86",
+                                        color: "white",
+                                        ...provided.draggableProps.style
+                                      }}
+                                    >
+                                      {item.content}
+                                    </div>
+                                  );
+                                }}
+                              </Draggable>
+                            );
+                          })}
+                          {provided.placeholder}
+                        </div>
+                      );
+                    }}
+                  </Droppable>
+                </div>
+              </div>
+            );
+          })}
+        </DragDropContext>
+      </div>
     </div>
   );
 }
